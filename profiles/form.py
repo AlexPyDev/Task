@@ -18,9 +18,9 @@ class CustomUserCreationForm(forms.Form):
         RegexValidator(regex=r'^[0-9A-Za-z-_.]+$', message="Invalid type")],
                                help_text="Username can consist words, digits and symbols ./-/_")
     email = forms.EmailField(label="Email:", help_text="my_email@example.com")
-    role = forms.ChoiceField(label="Role:", widget=forms.Select, choices=[('Administrator', 'Administrators'),
-                                                                          ('Editor', 'Editors'),
-                                                                          ('User', 'Users')])
+    role_name = forms.ChoiceField(label="Role:", widget=forms.Select, choices=[('Administrator', 'Administrators'),
+                                                                               ('Editor', 'Editors'),
+                                                                               ('User', 'Users')])
     password1 = forms.CharField(label="Password:", widget=forms.PasswordInput, strip=False,
                                 help_text=["Password shouldn't be too simple.",
                                            "Password must be at least 8 symbols.",
@@ -42,14 +42,14 @@ class CustomUserCreationForm(forms.Form):
             raise ValidationError(_("This email is already in use."), code='invalid')
         return email
 
-    def clean_role(self):
-        role = self.cleaned_data['role']
+    def clean_role_name(self):
+        role_name = self.cleaned_data['role_name']
 
-        if role in ['Administrator', 'Editor']:
-            Roles.objects.get_or_create(name=role, premoderation=False)
+        if role_name in ['Administrator', 'Editor']:
+            Roles.objects.get_or_create(name=role_name, premoderation=False)
         else:
-            Roles.objects.get_or_create(name=role, premoderation=True)
-        return role
+            Roles.objects.get_or_create(name=role_name, premoderation=True)
+        return role_name
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -62,9 +62,9 @@ class CustomUserCreationForm(forms.Form):
         return password2
 
     def save(self, commit=True):
-        role = self.cleaned_data['role']
-        role = Roles.objects.get(name=role)
-        user = User.objects.create(
+        role_name = self.cleaned_data['role_name']
+        role = Roles.objects.get(name=role_name)
+        user = User.objects.create_user(
             username=self.cleaned_data['username'],
             email=self.cleaned_data['email'],
             password=self.cleaned_data['password1'],

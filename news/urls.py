@@ -21,4 +21,7 @@ from . import views
 app_name = 'news'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('create-article/', views.create_article, name='create_article'),
+    path('article/<str:article_pk>/', views.article_posts, name='article_posts'),
+    path('article/<str:article_pk>/reply/', views.reply_article, name='reply_article')
 ]

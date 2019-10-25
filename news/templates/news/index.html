@@ -1,9 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Index{% endblock %}
+{% block title %}News{% endblock %}
 
 {% block page %}
+    <div class="mb-4">
+        <a class="btn btn-primary" href="{% url 'news:create_article' %}" role="button">Create article</a>
+    </div>
 
-    <h1>Hello, Alex!</h1>
+    <div class="table-responsive-md">
+        <table class="table table-hover">
+            <caption>News list.</caption>
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">Headlines:</th>
+                </tr>
+            </thead>
+            {% for article in articles %}
+                {% if article.is_published or user.permission.role.name == 'Administrator' or article.created_by == user.username %}
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="row">
+                                    <p class="mb-0 px-2">
+                                        <a href="{% url 'news:article_posts' article.pk %}">{{ article.title }}</a>
+                                    </p>
+                                    {% if not article.is_published %}
+                                        <span class="badge badge-warning ml-auto">Not moderated</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        </tr>
+                    </tbody>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
 
-{% endblock page %}
+{% endblock %}

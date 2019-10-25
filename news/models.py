@@ -1,17 +1,26 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils.html import mark_safe
 
 
 class BaseModel(models.Model):
-    created_on = models.DateTimeField(auto_now_add=True)
-    modified_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
 
 
 class Article(BaseModel):
-    title = models.CharField(max_length=256)
-    content = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='+')
+    title = models.CharField(max_length=128)
+    message = models.TextField()
     is_published = models.BooleanField(default=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Post(BaseModel):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='posts')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='+')
+    message = models.CharField(max_length=4000)

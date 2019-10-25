@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block page %}
+    <div class="card">
+        <div class="card-body">
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.message }}</p>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <a href="{% url 'news:reply_article' article.pk %}" class="btn btn-primary" role="button">Write message</a>
+    </div>
+
+    {% for post in posts %}
+        <div id="{{ post.pk }}" class="card mb-2">
+            <div class="card-header py-2 px-3">{{ post.created_by }}</div>
+            <div class="card-body p-3">
+                <p class="card-text">{{ post.message }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

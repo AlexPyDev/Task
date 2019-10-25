@@ -13,15 +13,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Index</title>
-
     {% block stylesheet %}{% endblock %}
 </head>
 
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="">TestTask</a>
+        <a class="navbar-brand" href="{% url 'news:index' %}">TestTask</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,14 +29,10 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="text-decoration: none;">
-                            {# {% gravatar user.email 18 %} #}
-                            <b class="nav-item caret">Профіль</b>
+                            <b class="nav-item caret">Profile</b>
                         </a>
                         <ul class="nav-item dropdown-menu">
-                            <li><a class="nav-link" href="#">User data</a></li>
-                            <li><a class="nav-link" href="#">Change password</a></li>
-                            <div class="dropdown-divider"></div>
-                            <li><a class="nav-link" href="#">Exit</a></li>
+                            <li><a class="nav-link" href="{% url 'profiles:user_logout' %}">Exit</a></li>
                         </ul>
                     </li>
                 {% else %}

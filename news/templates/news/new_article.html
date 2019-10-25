@@ -1,0 +1,21 @@
+{% extends 'base.html' %}#
+
+{% block title %}Create new article{% endblock %}
+
+{% block page %}
+    <div class="row justify-content-center" id="new-topic-form">
+        <div class="col-sm-8">
+            <form  method="post" novalidate>
+                {% csrf_token %}
+
+                <div class="page-header">
+                    <h2>Create article</h2>
+                </div>
+
+                {% include 'form.html' %}
+                <button type="submit" class="btn btn-success">Create</button>
+                <a class="btn btn-secondary" href="{% url 'news:index' %}">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}
