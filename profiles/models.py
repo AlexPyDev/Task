@@ -11,11 +11,14 @@ class BaseModel(models.Model):
 
 
 class Roles(BaseModel):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=64, unique=True)
     moderation = models.BooleanField(default=True)
 
 
-class Permission(BaseModel):
+class ExtendedUserData(BaseModel):
     """Extended User model"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True)
+    first_name = models.CharField(max_length=128)
+    last_name = models.CharField(max_length=128)
+    birth_date = models.DateField()

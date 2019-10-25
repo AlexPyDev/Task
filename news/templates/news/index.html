@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             {% for article in articles %}
-                {% if article.is_published or user.permission.role.name == 'Administrator' or article.created_by == user.username %}
+                {% if article.is_published or user.extendeduserdata.role.name == 'Administrator' or article.created_by.username == user.username %}
                     <tbody>
                         <tr>
                             <td>
@@ -29,7 +29,6 @@
                                     {% endif %}
                                 </div>
                             </td>
-                        </tr>
                         </tr>
                     </tbody>
                 {% endif %}

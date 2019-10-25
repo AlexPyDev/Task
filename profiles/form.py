@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 
-from.models import Roles, Permission
+from.models import Roles, ExtendedUserData
 
 
 class LogInForm(forms.Form):
@@ -14,13 +14,18 @@ class LogInForm(forms.Form):
 
 
 class CustomUserCreationForm(forms.Form):
+    YEARS = [x for x in range(1940,2020)]
+
     username = forms.CharField(label='Username:', min_length=4, max_length=25, validators=[
         RegexValidator(regex=r'^[0-9A-Za-z-_.]+$', message="Invalid type")],
                                help_text="Username can consist words, digits and symbols ./-/_")
-    email = forms.EmailField(label="Email:", help_text="my_email@example.com")
-    role_name = forms.ChoiceField(label="Role:", widget=forms.Select, choices=[('Administrator', 'Administrators'),
-                                                                               ('Editor', 'Editors'),
-                                                                               ('User', 'Users')])
+    email = forms.EmailField(label='Email:', help_text="my_email@example.com")
+    first_name = forms.CharField(label='First name')
+    last_name = forms.CharField(label='Last name')
+    birth_date = forms.DateField(label='Birth date', widget=forms.SelectDateWidget(years=YEARS))
+    role_name = forms.ChoiceField(label="Role:", widget=forms.Select, choices=[('User', 'Users'),
+                                                                               ('Administrator', 'Administrators'),
+                                                                               ('Editor', 'Editors')])
     password1 = forms.CharField(label="Password:", widget=forms.PasswordInput, strip=False,
                                 help_text=["Password shouldn't be too simple.",
                                            "Password must be at least 8 symbols.",
@@ -46,9 +51,9 @@ class CustomUserCreationForm(forms.Form):
         role_name = self.cleaned_data['role_name']
 
         if role_name in ['Administrator', 'Editor']:
-            Roles.objects.get_or_create(name=role_name, premoderation=False)
+            Roles.objects.get_or_create(name=role_name, moderation=False)
         else:
-            Roles.objects.get_or_create(name=role_name, premoderation=True)
+            Roles.objects.get_or_create(name=role_name, moderation=True)
         return role_name
 
     def clean_password2(self):
@@ -69,5 +74,9 @@ class CustomUserCreationForm(forms.Form):
             email=self.cleaned_data['email'],
             password=self.cleaned_data['password1'],
         )
-        Permission.objects.create(user=user, role=role)
+        ExtendedUserData.objects.create(user=user,
+                                        first_name=self.cleaned_data['first_name'],
+                                        last_name=self.cleaned_data['last_name'],
+                                        birth_date=self.cleaned_data['birth_date'],
+                                        role=role)
         return user

@@ -17,7 +17,7 @@ def create_article(request):
             article = form.save(commit=False)
             article.created_by = request.user
             # Set True to cancel moderation if need
-            if not request.user.permission.role.moderation:
+            if not request.user.extendeduserdata.role.moderation:
                 article.is_published = True
             article.save()
             return redirect('news:index')
