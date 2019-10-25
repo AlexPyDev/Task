@@ -9,7 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.translation import gettext as _
 
 from .form import LogInForm, CustomUserCreationForm
-from .tasks import send_email_confirmation
+from .tasks import send_email
 from .tokens import account_activation_token
 
 
@@ -57,8 +57,10 @@ def register(request):
             })
             recipient_mail = form.cleaned_data.get('email')
             # Send email
-            send_email_confirmation.delay(recipient_mail, text)
-            return render(request, 'news/index.html', {'user_data': user})
+            send_email.delay(recipient_mail, text)
+            form = LogInForm()
+            messages.info(request, _("Email with activation account link has been sent to your email address."))
+            return render(request, 'profiles/login.html', {'form': form})
     else:
         form = CustomUserCreationForm()
     return render(request, 'profiles/register.html', {'form': form})
@@ -96,5 +98,5 @@ def resend_confirmation(request, username):
             'token': account_activation_token.make_token(user_data),
         })
         # Send email
-        send_email_confirmation.delay(user_data.email, text)
+        send_email.delay(user_data.email, text)
     return render(request, 'profiles/unconfirmed.html', {'user_data': user_data})

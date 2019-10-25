@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Article
 from .form import ArticleForm, PostForm
+from profiles.tasks import send_email
 
 
 def index(request):
@@ -42,6 +43,7 @@ def reply_article(request, article_pk):
             post.article = article
             post.created_by = request.user
             post.save()
+            send_email(article.created_by.email, f"You have reply in article '{article.title}'")
             return redirect('news:article_posts', article_pk=article.pk)
     else:
         form = PostForm()

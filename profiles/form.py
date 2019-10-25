@@ -20,8 +20,8 @@ class CustomUserCreationForm(forms.Form):
         RegexValidator(regex=r'^[0-9A-Za-z-_.]+$', message="Invalid type")],
                                help_text="Username can consist words, digits and symbols ./-/_")
     email = forms.EmailField(label='Email:', help_text="my_email@example.com")
-    first_name = forms.CharField(label='First name')
-    last_name = forms.CharField(label='Last name')
+    first_name = forms.CharField(label='First name',required=False)
+    last_name = forms.CharField(label='Last name', required=False)
     birth_date = forms.DateField(label='Birth date', widget=forms.SelectDateWidget(years=YEARS))
     role_name = forms.ChoiceField(label="Role:", widget=forms.Select, choices=[('User', 'Users'),
                                                                                ('Administrator', 'Administrators'),
