@@ -24,5 +24,5 @@ urlpatterns = [
     path('logout/', views.user_logout, name='user_logout'),
     path('register/', views.register, name='register'),
     path('confirm/<slug:uidb64>/<slug:token>/', views.confirm, name='confirm'),
-    path(r'resend-confirmation/(?P<username>[0-9A-Za-z_.-]+)/', views.resend_confirmation, name='resend_confirmation'),
+    path('resend-confirmation/<str:username>/', views.resend_confirmation, name='resend_confirmation'),
 ]
