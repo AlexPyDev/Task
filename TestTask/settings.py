@@ -129,3 +129,6 @@ STATIC_URL = '/static/'
 
 # Email setting
 EMAIL_HOST_USER = 'Pythonicalex@gmail.com'
+
+# Celery staff
+CELERY_BROKER_URL = 'amqp://localhost'

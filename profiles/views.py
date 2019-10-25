@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -9,9 +8,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.translation import gettext as _
 
-import requests
-
 from .form import LogInForm, CustomUserCreationForm
+from .tasks import send_email_confirmation
 from .tokens import account_activation_token
 
 
@@ -57,17 +55,9 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            mail_subject = 'Account activation.'
             recipient_mail = form.cleaned_data.get('email')
-            sender = getattr(settings, 'EMAIL_HOST_USER', None)
             # Send email
-            requests.post(
-                "https://api.mailgun.net/v3/sandbox4dcc7b1a3b0e4018bde85dd3592b0dfa.mailgun.org/messages",
-                auth=("api", "3378ab16e772dd57a0f6be1fe4703ac3-2dfb0afe-25ec1a66"),
-                data={"from": f"TestTask robot <{sender}>",
-                      "to": [recipient_mail],
-                      "subject": mail_subject,
-                      "text": text})
+            send_email_confirmation.delay(recipient_mail, text)
             return render(request, 'news/index.html', {'user_data': user})
     else:
         form = CustomUserCreationForm()
@@ -105,14 +95,6 @@ def resend_confirmation(request, username):
             'uid': urlsafe_base64_encode(force_bytes(user_data.pk)),
             'token': account_activation_token.make_token(user_data),
         })
-        mail_subject = 'Account activation.'
-        sender = getattr(settings, 'EMAIL_HOST_USER', None)
         # Send email
-        requests.post(
-            "https://api.mailgun.net/v3/sandbox4dcc7b1a3b0e4018bde85dd3592b0dfa.mailgun.org/messages",
-            auth=("api", "3378ab16e772dd57a0f6be1fe4703ac3-2dfb0afe-25ec1a66"),
-            data={"from": f"TestTask robot <{sender}>",
-                  "to": [user_data.email],
-                  "subject": mail_subject,
-                  "text": text})
+        send_email_confirmation.delay(user_data.email, text)
     return render(request, 'profiles/unconfirmed.html', {'user_data': user_data})
