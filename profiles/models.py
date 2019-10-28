@@ -14,6 +14,9 @@ class Roles(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     moderation = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
 
 class ExtendedUserData(BaseModel):
     """Extended User model"""
@@ -22,3 +25,6 @@ class ExtendedUserData(BaseModel):
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     birth_date = models.DateField()
+
+    def __str__(self):
+        return self.user.username
