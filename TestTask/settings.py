@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'ckeditor',
+    'ckeditor_uploader',
     'news.apps.NewsConfig',
     'profiles.apps.ProfilesConfig'
 ]
@@ -126,9 +128,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media/')
 
 # Email setting
-EMAIL_HOST_USER = 'Pythonicalex@gmail.com'
+EMAIL_HOST_USER = 'TestApp@example.com'
 
 # Celery staff
 CELERY_BROKER_URL = 'amqp://localhost'
+
+# Ckedior staff
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "uploads/"

@@ -11,7 +11,8 @@
                 <div class="page-header">
                     <h2>Create article</h2>
                 </div>
-
+                {# Need if add Ckeditor by widget in form #}
+                {{ form.media }}
                 {% include 'form.html' %}
                 <button type="submit" class="btn btn-success">Create</button>
                 <a class="btn btn-secondary" href="{% url 'news:index' %}">Cancel</a>
