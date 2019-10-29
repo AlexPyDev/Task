@@ -1,0 +1,1 @@
+После миграций BD нудно выполнить $ ./manage.py collectstatic (это нужно для WYSIWYG редактора).
